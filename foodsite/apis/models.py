@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class Food(models.Model):
     name = models.CharField(max_length=150)
-    date = models.DateTimeField(auto_now_add=True, blank=True)
+    date = models.DateField(blank=True, editable=True)
     user = models.ForeignKey(User, blank=True, on_delete=models.CASCADE)
 
     carb = models.IntegerField()

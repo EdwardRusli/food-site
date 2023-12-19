@@ -5,6 +5,7 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
 import json
+from datetime import datetime
 
 from .models import Food
 from .serializers import UserSerializer, FoodSerializer
@@ -40,6 +41,10 @@ def user_logout(request):
 # Create food entry
 @api_view(['POST'])
 def add_food(request):
+
+    if not 'date' in request.data:
+        request.data['date'] = f"{datetime.now().year}-{datetime.now().month}-{datetime.now().day}"
+
     if request.user.is_authenticated:    
         food = FoodSerializer(data=request.data)
         if food.is_valid():
@@ -60,6 +65,7 @@ def all_foods(request):
     foods = Food.objects.all()
     food_serializer = FoodSerializer(foods, many=True)
     return Response(food_serializer.data)
+
 # Get foods of user logged in
 @api_view(['GET'])
 def get_user_food_history(request):
