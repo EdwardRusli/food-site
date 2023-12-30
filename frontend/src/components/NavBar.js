@@ -1,4 +1,5 @@
 import React, { Component, Profiler } from "react";
+import axios from "axios";
 
 class NavBar extends Component {
   constructor(props) {
@@ -6,6 +7,21 @@ class NavBar extends Component {
   }
 
   render() {
+    const handleLogout = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/api/logout/", {
+          withCredentials: true,
+        });
+        localStorage.removeItem("token");
+        //setIsLoggedIn(false);
+        console.log(response.data.message);
+        window.location.reload();
+      } catch (err) {
+        console.log(err);
+      }
+
+      // Store the token in local storage or state
+    };
     return (
       <div className="NavBar position-relative fs-4 shadow">
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -22,6 +38,19 @@ class NavBar extends Component {
                     Profile
                   </a>
                 </li>
+                {localStorage.getItem("token") != null ? (
+                  <li className="nav-item">
+                    <a
+                      className="nav-link active"
+                      href="#"
+                      onClick={() => handleLogout()}
+                    >
+                      Logout
+                    </a>
+                  </li>
+                ) : (
+                  true
+                )}
               </ul>
             </div>
           </div>

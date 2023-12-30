@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# to start server, run the command "virtual_environment/Scripts/Activate.ps1"
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
