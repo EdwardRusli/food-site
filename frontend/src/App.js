@@ -1,66 +1,19 @@
 import React, { createContext, useState } from "react";
-import axios from "axios";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import NavBar from "./NavBar";
-import SearchBar from "./SearchBar";
-import FoodList from "./FoodList";
-
-export const AppContext = createContext(null);
+import Main from "./pages/Main";
+import Login from "./pages/Login";
 
 const App = () => {
-  // const register = (p_username, p_password, p_email) => {
-  // 	axios.post("http://127.0.0.1:8000/api/register/", {
-  // 		"username": p_username,
-  // 		"password": p_password,
-  // 		"email": p_email
-  // 	},{
-  // 		headers: {
-  // 			'Content-Type': 'application/json'
-  // 		}
-  // 	}).then(res => {
-  // 		console.log(res);
-  // 	})
-  // }
-
-  const [shouldRenderFoodList, setShouldRenderFoodList] = useState(false);
-  const [foodList, setFoodList] = useState([]);
-
-  const requestFoodList = (p_query) => {
-    const params = {
-      apiKey: "840aec0e421d4509aabf9a0eaed9d8ae", // api key dari spoonacular
-      //apiKey: "",
-      query: p_query,
-      addRecipeNutrition: true,
-    };
-    axios
-      .get("https://api.spoonacular.com/recipes/complexSearch", { params })
-      .then((res) => {
-        setFoodList(res.data.results);
-        setShouldRenderFoodList(true);
-        console.log(res.data.results);
-      });
-  };
-
   return (
-    <AppContext.Provider value={{ requestFoodList, foodList }}>
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col">
-            <NavBar />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col">
-            <SearchBar />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col">
-            {shouldRenderFoodList ? <FoodList /> : <div></div>}
-          </div>
-        </div>
-      </div>
-    </AppContext.Provider>
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Main />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 };
 
