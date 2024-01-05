@@ -32,6 +32,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Adjust to your React app's origin
 ]
 
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
+
 
 # Application definition
 
@@ -70,6 +72,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     )
 }
 

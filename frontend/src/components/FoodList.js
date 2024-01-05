@@ -1,15 +1,45 @@
 import React, { useContext, useState } from "react";
 import { AppContext } from "../pages/Main";
 
-import Button from "react-bootstrap/Button";
+import axios from "axios";
+
 import Modal from "react-bootstrap/Modal";
 
 import Recipes from "./Recipes";
+
+import Cookies from "js-cookie";
 
 const FoodList = () => {
   const { foodList } = useContext(AppContext);
   const [showRecipes, setShowRecipes] = useState(false);
   const [currentFood, setCurrentFood] = useState(null);
+
+  const addFood = async (p_food) => {
+
+    axios.defaults.xsrfHeaderName = "X-CSRFToken";
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/add_food",
+        {
+          name: p_food["title"],
+          carb: p_food["nutrition"]["nutrients"][3]["amount"] * 1000, // index 3 carb, convert g to mg
+          fat: p_food["nutrition"]["nutrients"][1]["amount"] * 1000, // index 1 fat, convert g to mg
+          protein: p_food["nutrition"]["nutrients"][8]["amount"] * 1000, // index 8 protein, convert g to mg
+          calorie: p_food["nutrition"]["nutrients"][0]["amount"] * 1000, // // index 0 calories, convert kcal to cal
+        },
+        {
+          headers: { 
+            "Content-Type": "application/json",
+            "X-CSRFToken": Cookies.get('csrftoken'),
+          },
+          withCredentials: true,
+        }
+      )
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const displayFood = (p_food, p_index) => {
     return (
@@ -24,7 +54,12 @@ const FoodList = () => {
               src={p_food["image"]}
             ></img>
             <div className="d-grid">
-              <button type="button" className="btn btn-primary">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => {
+                  addFood(p_food);
+                }}>
                 Add
               </button>
               <button
